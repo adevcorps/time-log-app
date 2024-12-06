@@ -1,75 +1,78 @@
 'use client'
 
 import Image from "next/image";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 export default function Home() {
-  const [activeColor, setActiveColor] = useState(null); // Tracks the active pencil color
-  const isDragging = useRef(false); // Tracks dragging state
-  const timeBarRef = useRef(null);
-  const handleDrag = (e) => {
-    if (!isDragging.current || !activeColor) return;
+  const [activeColor, setActiveColor] = useState("#22c55e"); // Default green
+  const [isDragging, setIsDragging] = useState(false); // Track dragging state
+  const loggerPieces = new Array(24).fill(null); // 24 pieces for example
 
-    const elements = document.elementsFromPoint(
-      e.clientX || e.touches[0]?.clientX,
-      e.clientY || e.touches[0]?.clientY
-    );
-
-    elements.forEach((el) => {
-      if (el.classList.contains("time-segment")) {
-        el.style.backgroundColor = activeColor;
-      }
-    });
+  const handleMouseDown = (index) => {
+    setIsDragging(true);
+    changeColor(index);
   };
 
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
+  const handleMouseEnter = (index) => {
+    if (isDragging) {
+      changeColor(index);
+    }
+  };
+
+  const changeColor = (index) => {
+    const piece = document.getElementById(`logger-piece-${index}`);
+    if (piece) {
+      piece.style.backgroundColor = activeColor;
+    }
+  };
 
   return (
-     <div className="relative min-h-screen bg-gray-100">
-      {/* Fixed pencil container */}
-      <div className="fixed top-4 left-1/2 transform -translate-x-1/2 flex space-x-4 z-50">
+    <div
+      className="relative min-h-screen bg-gray-100 flex items-center justify-center"
+      onMouseUp={handleMouseUp} // Stop dragging when mouse is released
+      onTouchEnd={handleMouseUp} // Stop dragging for touch
+    >
+      {/* Fixed Pencil Selector */}
+      <div className="absolute top-5 left-5 space-y-4">
         <button
-          className="w-10 h-10 bg-green-500 rounded-full"
-          onClick={() => setActiveColor("green")}
+          className="w-8 h-8 bg-green-500 rounded-full"
+          onClick={() => setActiveColor("#22c55e")}
         />
         <button
-          className="w-10 h-10 bg-blue-500 rounded-full"
-          onClick={() => setActiveColor("blue")}
+          className="w-8 h-8 bg-blue-500 rounded-full"
+          onClick={() => setActiveColor("#3b82f6")}
         />
         <button
-          className="w-10 h-10 bg-yellow-500 rounded-full"
-          onClick={() => setActiveColor("yellow")}
+          className="w-8 h-8 bg-gray-500 rounded-full"
+          onClick={() => setActiveColor("#6b7280")}
         />
       </div>
 
-      {/* Time bar */}
-      <div
-        className="mt-20 mx-auto w-full max-w-md"
-        ref={timeBarRef}
-        onMouseDown={() => (isDragging.current = true)}
-        onMouseUp={() => (isDragging.current = false)}
-        onMouseMove={handleDrag}
-        onTouchStart={() => (isDragging.current = true)}
-        onTouchEnd={() => (isDragging.current = false)}
-        onTouchMove={handleDrag}
-      >
-        <div className="grid grid-cols-24 border border-gray-300">
-          {Array.from({ length: 24 }).map((_, idx) => (
-            <div
-              key={idx}
-              className="time-segment h-10 border-r border-gray-200"
-              style={{ backgroundColor: "white" }}
-            ></div>
-          ))}
-        </div>
-      </div>
-
-      {/* Scrollable content */}
-      <div className="mt-10 text-center text-gray-600">
-        {Array.from({ length: 20 }).map((_, idx) => (
-          <p key={idx} className="mb-4">
-            Scrollable content line {idx + 1}.
-          </p>
+      {/* Time Logger Bar */}
+      <div className="flex flex-col items-center">
+        {loggerPieces.map((_, index) => (
+          <div
+            key={index}
+            id={`logger-piece-${index}`}
+            className="w-16 h-4 bg-gray-300 mb-1 cursor-pointer"
+            onMouseDown={() => handleMouseDown(index)} // Start dragging
+            onMouseEnter={() => handleMouseEnter(index)} // Change color while dragging
+            onTouchStart={() => handleMouseDown(index)} // Touch support
+            onTouchMove={(e) => {
+              const element = document.elementFromPoint(
+                e.touches[0].clientX,
+                e.touches[0].clientY
+              );
+              if (element && element.id.includes("logger-piece-")) {
+                const touchIndex = parseInt(element.id.split("-").pop());
+                handleMouseEnter(touchIndex);
+              }
+            }} // Change color for touch drag
+          />
         ))}
       </div>
     </div>
