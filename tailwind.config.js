@@ -13,6 +13,7 @@ module.exports = {
       },
       fontFamily: {
         rubik: ['Rubik', 'sans-serif'],
+        sourceSans: ['Source Sans Pro', 'sans-serif'],
       },
     },
   },
