@@ -1,16 +1,36 @@
 'use client';
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import progressImg from './images/progress.png';
+// import penCilIcon from './images/pencil.svg';
 
 export default function Home() {
-  const [activeColor, setActiveColor] = useState("#22c55e"); // Default green
+  const [activeColor, setActiveColor] = useState(""); // Default green
   const [isDragging, setIsDragging] = useState(false); // Track dragging state
-  const [loggerPieces, setLoggerPieces] = useState(new Array(144).fill("#ccc")); // Initial colors for logger pieces
-
+  const [loggerPieces, setLoggerPieces] = useState(new Array(141).fill("#ccc")); // Initial colors for logger pieces
+  const [isButtonClicked, setIsButtonClikced] = useState({
+    out: false,
+    awake: false,
+    sleep: false
+  });
   const logPanRef = useRef(null);
 
+  const handleChangeButtonBorder = (color, kind) => {
+    let tmpState = {
+      out: false,
+      awake: false,
+      sleep: false
+    }
+  
+    tmpState[kind]=true;
+    console.log(tmpState)
+    setIsButtonClikced(tmpState)
+    setActiveColor(color)
+  }
+  useEffect(() => {
+    logPanRef.current.style.overflowY = "hidden";
+  }, [])
   const handleMouseDown = (index) => {
     setIsDragging(true);
     if (logPanRef.current) {
@@ -35,6 +55,7 @@ export default function Home() {
   };
 
   const changeColor = (index) => {
+    console.log(index)
     const loggerPiece = document.getElementById(`logger-piece-${index}`);
     if (loggerPiece) {
       loggerPiece.style.backgroundColor = activeColor;
@@ -43,7 +64,7 @@ export default function Home() {
 
 
   const timeLabels = Array.from(
-    { length: 49 },
+    { length: 48 },
     (_, i) => `${String(Math.floor(i / 2)).padStart(2, "0")}:${i % 2 === 0 ? "00" : "30"}`
   );
 
@@ -69,23 +90,29 @@ export default function Home() {
               onTouchEnd={handleMouseUp}
             >
               <div className="absolute left-[33px] bottom-[79px] flex flex-col space-y-4 ">
-                <button
-                  className="w-8 h-8 bg-green-500 rounded-full"
-                  onClick={() => setActiveColor("#22c55e")}
-                />
-                <button
-                  className="w-8 h-8 bg-blue-500 rounded-full"
-                  onClick={() => setActiveColor("#3b82f6")}
-                />
-                <button
-                  className="w-8 h-8 bg-gray-500 rounded-full"
-                  onClick={() => setActiveColor("#6b7280")}
-                />
+                <div className={`flex w-[120px] items-center gap-4`} onClick={() => handleChangeButtonBorder("#0000001A", 'out')}>
+                  <button
+                    className={`w-[32px] h-[32px] bg-[#0000001A] rounded-full flex justify-center items-center ${isButtonClicked['out'] ? 'border-2 border-[#4B86AA]' : ''}`}
+                  ><Image src={'./images/pencil.svg'} alt="Pencil Icon" width={15} height={15} /></button>
+                  <span className="font-sourceSans font-[400] text-[#2C2C2C] text-[12px] leading-[15.6px]">Out of bed</span>
+                </div>
+                <div className="flex w-[120px] items-center gap-4" onClick={() => handleChangeButtonBorder("#4B86AA4D", 'awake')}>
+                  <button
+                    className={`w-[32px] h-[32px] bg-[#4B86AA4D] rounded-full flex justify-center items-center ${isButtonClicked['awake'] ? 'border-2 border-[#4B86AA]' : ''}`}
+                  ><Image src={'./images/pencil.svg'} alt="Pencil Icon" width={15} height={15} /></button>
+                  <span className="font-sourceSans font-[400] text-[#2C2C2C] text-[12px] leading-[15.6px]">Awake in bed</span>
+                </div>
+                <div className="flex w-[120px] items-center gap-4" onClick={() => handleChangeButtonBorder("#BBE600", 'sleep')}>
+                  <button
+                    className={`w-[32px] h-[32px] bg-[#BBE600] rounded-full flex justify-center items-center ${isButtonClicked['sleep'] ? 'border-2 border-[#4B86AA]' : ''}`}
+                  ><Image src={'./images/pencil.svg'} alt="Pencil Icon" width={15} height={15} /></button>
+                  <span className="font-sourceSans font-[400] text-[#2C2C2C] text-[12px] leading-[15.6px]">Sleep in bed</span>
+                </div>
               </div>
               <div className="flex items-start">
-                <div className="flex flex-col items-end pr-4" style={{ height: `calc(3 * 1rem + 2 * 0.335rem)` }}>
+                <div className="flex flex-col items-end pr-4">
                   {timeLabels.map((time, index) => (
-                    <div key={index} className="text-sm text-gray-500" style={{ height: `calc(3 * 1rem + 2 * 0.335rem)` }}>
+                    <div key={index} className="font-sourceSans font-[400] text-[#4B86AAB2] text-[13px]" style={{ height: `calc(3 * 1rem + 2 * 0.335rem)` }}>
                       {time}
                     </div>
                   ))}
@@ -95,7 +122,7 @@ export default function Home() {
                     <div
                       key={index}
                       id={`logger-piece-${index}`}
-                      className="w-16 h-4 bg-gray-300 mb-1 cursor-pointer rounded-[3px]"
+                      className="w-16 h-4 bg-[#0000001A] mb-1 cursor-pointer rounded-[3px]"
                       onMouseDown={() => handleMouseDown(index)}
                       onMouseEnter={() => handleMouseEnter(index)}
                       onTouchStart={() => handleMouseDown(index)}
