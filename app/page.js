@@ -126,7 +126,7 @@ export default function Home() {
                   <span className="font-sourceSans font-[400] text-[#2C2C2C] text-[12px] leading-[15.6px]">Sleep in bed</span>
                 </div>
               </div>
-              <div className="flex items-start" ref={barRef}>
+              <div className="flex items-start" ref={barRef} style={{ touchAction: 'none'}}>
                 <div className="flex flex-col items-end pr-4">
                   {timeLabels.map((time, index) => (
                     <div key={index} className="font-sourceSans font-[400] text-[#4B86AAB2] text-[13px]" style={{ height: `calc(3 * 1rem + 2 * 0.335rem)` }}>
