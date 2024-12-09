@@ -9,7 +9,7 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 export default function Home() {
   const [activeColor, setActiveColor] = useState(""); // Default green
   const [isDragging, setIsDragging] = useState(false); // Track dragging state
-  const [loggerPieces, setLoggerPieces] = useState(new Array(141).fill("#ccc")); // Initial colors for logger pieces
+  const [loggerPieces, setLoggerPieces] = useState(new Array(96).fill("#ccc")); // Initial colors for logger pieces
   const [isButtonClicked, setIsButtonClikced] = useState({
     out: false,
     awake: false,
@@ -79,8 +79,8 @@ export default function Home() {
   };
 
   const timeLabels = Array.from(
-    { length: 48 },
-    (_, i) => `${String(Math.floor(i / 2)).padStart(2, "0")}:${i % 2 === 0 ? "00" : "30"}`
+    { length: 24 },
+    (_, i) => `${String((20 + i) % 24).padStart(2, "0")}:00`
   );
 
   return (
@@ -129,12 +129,12 @@ export default function Home() {
               <div className="flex items-start" ref={barRef} style={{ touchAction: 'none'}}>
                 <div className="flex flex-col items-end pr-4">
                   {timeLabels.map((time, index) => (
-                    <div key={index} className="font-sourceSans font-[400] text-[#4B86AAB2] text-[13px]" style={{ height: `calc(3 * 1rem + 2 * 0.335rem)` }}>
+                    <div key={index} className="font-sourceSans font-[400] text-[#4B86AAB2] text-[13px]" style={{ height: `calc(4 * 1rem + 2 * 0.5rem)` }}>
                       {time}
                     </div>
                   ))}
                 </div>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center pt-[8px]">
                   {loggerPieces.map((_, index) => (
                     <div
                       key={index}
