@@ -48,7 +48,9 @@ export default function Home() {
     setIsDragging(true);
     console.log(bodyRef.current)
     if (bodyRef.current) {
-      disableBodyScroll(bodyRef.current);
+      document.body.style.overflowY = "hidden";
+      // barRef.current.style.overflowY = "";
+      // disableBodyScroll(bodyRef.current);
     }
     changeColor(index); // Change color of the logger piece
   };
@@ -61,8 +63,9 @@ export default function Home() {
 
   const handleMouseUp = () => {
     setIsDragging(false);
+    document.body.style.overflowY = "";
     if (bodyRef.current) {
-      enableBodyScroll(bodyRef.current);
+      // enableBodyScroll(bodyRef.current);
       // document.body.style.overflow = "";
       // barRef.current.style.overflowY = "scroll"; // Re-enable vertical scroll for the log pan
     }
