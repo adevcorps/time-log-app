@@ -62,6 +62,7 @@ export default function Home() {
   }
   const handleMouseDown = (index, e) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(true);
     // if (logPanRef.current) {
     // if (e.touches != undefined) {
