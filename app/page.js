@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import progressImg from './images/progress.png';
+import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
 // import penCilIcon from './images/pencil.svg';
 
 export default function Home() {
@@ -18,8 +19,6 @@ export default function Home() {
   // const [translateYValue, setTranslateYValue] = useState(0);
   const logPanRef = useRef(null);
   const barRef = useRef(null);
-  const [startPosition, setStartPosition] = useState(0);
-  const [previousPosition, setPreviousPosition] = useState(0);
 
   const handleChangeButtonBorder = (color, kind) => {
     let tmpState = {
@@ -33,60 +32,28 @@ export default function Home() {
     setActiveColor(color)
   }
   useEffect(() => {
-    // const blockScroll = (e) => e.preventDefault();
-
-    // // Block scrolling during drag.
-    // const enableScroll = () => {
-    //   window.removeEventListener("scroll", blockScroll);
-    //   window.removeEventListener("touchmove", blockScroll);
-    // };
-
-    // const disableScroll = () => {
-    //   window.addEventListener("scroll", blockScroll, { passive: false });
-    //   window.addEventListener("touchmove", blockScroll, { passive: false });
-    // };
-
-    // const preventScroll = (e) => e.preventDefault();
-    // document.addEventListener("touchmove", preventScroll, { passive: false });
-    // logPanRef.current.style.overflowY = "hidden";
-    // setIsDragging ? disableScroll() : enableScroll();
-
-    // return enableScroll;
-
   }, [])
-  // }, [isDragging])
 
-  const disableScrolling = () => {
-    document.body.style.overflow = "hidden";
-    logPanRef.current.style.overflowY = "hidden";
-  }
   const handleMouseDown = (index, e) => {
-    e.preventDefault();
-    e.stopPropagation();
     setIsDragging(true);
-    // if (logPanRef.current) {
-    // if (e.touches != undefined) {
-    //   setStartPosition(e.touches[0].clientY);
-    //   setPreviousPosition(e.touches[0].clientY);
-    // }
-    document.body.style.overflow = "hidden";
-    logPanRef.current.style.overflowY = "hidden"; // Disable vertical scroll for the log pan
-    // }
+    if (barRef.current) {
+      disableBodyScroll(barRef.current);
+    }
     changeColor(index); // Change color of the logger piece
   };
 
   const handleMouseEnter = (index, e) => {
     if (isDragging) {
-      //updateBarPosition(e.touches[0].clientY);
-      changeColor(index); // Change color while dragging
+      changeColor(index);
     }
   };
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    if (logPanRef.current) {
-      document.body.style.overflow = "";
-      logPanRef.current.style.overflowY = "scroll"; // Re-enable vertical scroll for the log pan
+    if (barRef.current) {
+      enableBodyScroll(barRef.current);
+      // document.body.style.overflow = "";
+      // logPanRef.current.style.overflowY = "scroll"; // Re-enable vertical scroll for the log pan
     }
   };
 
@@ -97,47 +64,10 @@ export default function Home() {
     }
   };
 
-
   const timeLabels = Array.from(
     { length: 48 },
     (_, i) => `${String(Math.floor(i / 2)).padStart(2, "0")}:${i % 2 === 0 ? "00" : "30"}`
   );
-
-  const updateBarPosition = (position) => {
-    const barRect = barRef.current.getBoundingClientRect();
-    const logPanRect = logPanRef.current.getBoundingClientRect();
-
-    let translateYValue = position - startPosition; // Calculate the new position based on drag
-    console.log("==========================");
-    console.log(logPanRect.top);
-    console.log(logPanRect.bottom);
-    console.log(startPosition);
-    console.log(previousPosition);
-
-    // Prevent the bar from moving above the logPanRef
-    if (barRect.top + translateYValue <= logPanRect.top) {
-      translateYValue = logPanRect.top - barRect.top;
-    }
-
-    // Prevent the bar from moving below the logPanRef
-    if (barRect.bottom + translateYValue >= logPanRect.bottom) {
-      translateYValue = logPanRect.bottom - barRect.bottom;
-    }
-    // Update the previous position to detect direction
-    if (position < previousPosition) {
-      console.log('Moving up');
-      // Handle logic for upward movement here if needed
-    } else if (position > previousPosition) {
-      console.log('Moving down');
-      // Handle logic for downward movement here if needed
-    }
-
-    setPreviousPosition(position); // Store the current position for next comparison
-
-    // Apply the calculated translateY value to move the bar
-    barRef.current.style.transform = `translateY(${translateYValue}px)`;
-  };
-
 
   return (
     <div className="w-full bg-[#4B86AA0D]">
