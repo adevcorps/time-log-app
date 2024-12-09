@@ -34,20 +34,23 @@ export default function Home() {
   }
   useEffect(() => {
     logPanRef.current.style.overflowY = "hidden";
-    barRef.current.style.transition = "transform 0.001s ease-out";
 
   }, [])
+  const disableScrolling = () => {
+    document.body.style.overflow = "hidden";
+    logPanRef.current.style.overflowY = "hidden";
+  }
   const handleMouseDown = (index, e) => {
 
     setIsDragging(true);
-    if (logPanRef.current) {
-      if (e.touches != undefined) {
-        setStartPosition(e.touches[0].clientY);
-        setPreviousPosition(e.touches[0].clientY);
-      }
-      document.body.style.overflow = "hidden";
-      logPanRef.current.style.overflowY = "hidden"; // Disable vertical scroll for the log pan
-    }
+    // if (logPanRef.current) {
+      // if (e.touches != undefined) {
+      //   setStartPosition(e.touches[0].clientY);
+      //   setPreviousPosition(e.touches[0].clientY);
+      // }
+    document.body.style.overflow = "hidden";
+    logPanRef.current.style.overflowY = "hidden"; // Disable vertical scroll for the log pan
+    // }
     changeColor(index); // Change color of the logger piece
   };
 
@@ -171,7 +174,7 @@ export default function Home() {
                     <div
                       key={index}
                       id={`logger-piece-${index}`}
-                      className="w-16 h-4 bg-[#0000001A] mb-1 cursor-pointer rounded-[3px]"
+                      className="w-16 h-5 bg-[#0000001A] cursor-pointer pb-1 rounded-[3px]"
                       onMouseDown={(e) => handleMouseDown(index, e)}
                       onMouseEnter={(e) => handleMouseEnter(index, e)}
                       onTouchStart={(e) => handleMouseDown(index, e)}
