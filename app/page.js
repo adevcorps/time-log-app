@@ -23,8 +23,8 @@ export default function Home() {
   useEffect(() => {
     // Cleanup when the component unmounts
     return () => {
-      if (barRef.current) {
-        enableBodyScroll(barRef.current);
+      if (logPanRef.current) {
+        enableBodyScroll(logPanRef.current);
       }
     };
   }, []);
@@ -45,8 +45,8 @@ export default function Home() {
 
   const handleMouseDown = (index, e) => {
     setIsDragging(true);
-    if (barRef.current) {
-      disableBodyScroll(barRef.current, {
+    if (logPanRef.current) {
+      disableBodyScroll(logPanRef.current, {
         allowTouchMove: (el) => {
           while (el && el !== document.body) {
             if (el.id === `logger-piece-${index}`) {
@@ -69,10 +69,10 @@ export default function Home() {
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    if (barRef.current) {
-      enableBodyScroll(barRef.current);
+    if (logPanRef.current) {
+      enableBodyScroll(logPanRef.current);
       // document.body.style.overflow = "";
-      // logPanRef.current.style.overflowY = "scroll"; // Re-enable vertical scroll for the log pan
+      // barRef.current.style.overflowY = "scroll"; // Re-enable vertical scroll for the log pan
     }
   };
 
