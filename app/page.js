@@ -33,21 +33,40 @@ export default function Home() {
     setActiveColor(color)
   }
   useEffect(() => {
-    logPanRef.current.style.overflowY = "hidden";
+    const blockScroll = (e) => e.preventDefault();
 
-  }, [])
+    // Block scrolling during drag.
+    const enableScroll = () => {
+      window.removeEventListener("scroll", blockScroll);
+      window.removeEventListener("touchmove", blockScroll);
+    };
+
+    const disableScroll = () => {
+      window.addEventListener("scroll", blockScroll, { passive: false });
+      window.addEventListener("touchmove", blockScroll, { passive: false });
+    };
+
+    const preventScroll = (e) => e.preventDefault();
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+    logPanRef.current.style.overflowY = "hidden";
+    setIsDragging ? disableScroll() : enableScroll();
+
+    return enableScroll;
+
+  }, [isDragging])
+  
   const disableScrolling = () => {
     document.body.style.overflow = "hidden";
     logPanRef.current.style.overflowY = "hidden";
   }
   const handleMouseDown = (index, e) => {
-
+    e.preventDefault();
     setIsDragging(true);
     // if (logPanRef.current) {
-      // if (e.touches != undefined) {
-      //   setStartPosition(e.touches[0].clientY);
-      //   setPreviousPosition(e.touches[0].clientY);
-      // }
+    // if (e.touches != undefined) {
+    //   setStartPosition(e.touches[0].clientY);
+    //   setPreviousPosition(e.touches[0].clientY);
+    // }
     document.body.style.overflow = "hidden";
     logPanRef.current.style.overflowY = "hidden"; // Disable vertical scroll for the log pan
     // }
