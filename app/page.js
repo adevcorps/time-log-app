@@ -47,7 +47,7 @@ export default function Home() {
     // };
 
     // const preventScroll = (e) => e.preventDefault();
-    document.addEventListener("touchmove", preventScroll, { passive: false });
+    // document.addEventListener("touchmove", preventScroll, { passive: false });
     // logPanRef.current.style.overflowY = "hidden";
     // setIsDragging ? disableScroll() : enableScroll();
 
