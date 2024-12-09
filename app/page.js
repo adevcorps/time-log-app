@@ -174,7 +174,7 @@ export default function Home() {
                     <div
                       key={index}
                       id={`logger-piece-${index}`}
-                      className="w-16 h-5 bg-[#0000001A] cursor-pointer pb-1 rounded-[3px]"
+                      className="w-16 h-4 bg-[#0000001A] cursor-pointer mb-1 rounded-[3px]"
                       onMouseDown={(e) => handleMouseDown(index, e)}
                       onMouseEnter={(e) => handleMouseEnter(index, e)}
                       onTouchStart={(e) => handleMouseDown(index, e)}
