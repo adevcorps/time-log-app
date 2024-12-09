@@ -20,6 +20,15 @@ export default function Home() {
   const logPanRef = useRef(null);
   const barRef = useRef(null);
 
+  useEffect(() => {
+    // Cleanup when the component unmounts
+    return () => {
+      if (barRef.current) {
+        enableBodyScroll(barRef.current);
+      }
+    };
+  }, []);
+
   const handleChangeButtonBorder = (color, kind) => {
     let tmpState = {
       out: false,
@@ -37,7 +46,17 @@ export default function Home() {
   const handleMouseDown = (index, e) => {
     setIsDragging(true);
     if (barRef.current) {
-      disableBodyScroll(barRef.current);
+      disableBodyScroll(barRef.current, {
+        allowTouchMove: (el) => {
+          while (el && el !== document.body) {
+            if (el.id === `logger-piece-${index}`) {
+              return true; // Allow touch on logger-piece
+            }
+            el = el.parentElement;
+          }
+          return false; // Disable touch everywhere else
+        },
+      });
     }
     changeColor(index); // Change color of the logger piece
   };
