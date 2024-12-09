@@ -19,12 +19,13 @@ export default function Home() {
   // const [translateYValue, setTranslateYValue] = useState(0);
   const logPanRef = useRef(null);
   const barRef = useRef(null);
+  const bodyRef = useRef(null);
 
   useEffect(() => {
     // Cleanup when the component unmounts
     return () => {
-      if (barRef.current) {
-        enableBodyScroll(barRef.current);
+      if (bodyRef.current) {
+        enableBodyScroll(bodyRef.current);
       }
     };
   }, []);
@@ -45,9 +46,9 @@ export default function Home() {
 
   const handleMouseDown = (index, e) => {
     setIsDragging(true);
-    console.log(barRef.current)
-    if (barRef.current) {
-      disableBodyScroll(barRef.current);
+    console.log(bodyRef.current)
+    if (bodyRef.current) {
+      disableBodyScroll(bodyRef.current);
     }
     changeColor(index); // Change color of the logger piece
   };
@@ -60,8 +61,8 @@ export default function Home() {
 
   const handleMouseUp = () => {
     setIsDragging(false);
-    if (barRef.current) {
-      enableBodyScroll(barRef.current);
+    if (bodyRef.current) {
+      enableBodyScroll(bodyRef.current);
       // document.body.style.overflow = "";
       // barRef.current.style.overflowY = "scroll"; // Re-enable vertical scroll for the log pan
     }
@@ -80,7 +81,7 @@ export default function Home() {
   );
 
   return (
-    <div className="w-full bg-[#4B86AA0D]">
+    <div ref={bodyRef} className="w-full bg-[#4B86AA0D]">
       <div className="container pt-[80px] px-3 max-w-5xl text-center mx-auto bg-[rgba(75, 134, 170, 0.05)]">
         <p className="font-rubik font-[600] text-[#00000033] text-[10px] leading-[11.85px] tracking-[0.25rem] mb-[10px]">
           YOUR SLEEPLOG FOR
