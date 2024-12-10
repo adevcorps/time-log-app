@@ -119,7 +119,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                <div className="flex flex-col items-center pt-[12px]">
+                <div className="flex flex-col items-center pt-[11.5px]">
                   {loggerPieces.map((_, index) => (
                     <div
                       key={index}
