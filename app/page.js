@@ -3,8 +3,6 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import progressImg from './images/progress.png';
-import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'body-scroll-lock';
-// import penCilIcon from './images/pencil.svg';
 
 export default function Home() {
   const [activeColor, setActiveColor] = useState(""); // Default green
@@ -16,7 +14,6 @@ export default function Home() {
     sleep: false
   });
 
-  // const [translateYValue, setTranslateYValue] = useState(0);
   const logPanRef = useRef(null);
   const barRef = useRef(null);
   const bodyRef = useRef(null);
@@ -25,7 +22,7 @@ export default function Home() {
     // Cleanup when the component unmounts
     return () => {
       if (bodyRef.current) {
-        enableBodyScroll(bodyRef.current);
+        document.body.style.overflowY = "";
       }
     };
   }, []);
@@ -41,21 +38,16 @@ export default function Home() {
     setIsButtonClikced(tmpState)
     setActiveColor(color)
   }
-  useEffect(() => {
-  }, [])
 
-  const handleMouseDown = (index, e) => {
+  const handleMouseDown = (index) => {
     setIsDragging(true);
-    console.log(bodyRef.current)
     if (bodyRef.current) {
       document.body.style.overflowY = "hidden";
-      // barRef.current.style.overflowY = "";
-      // disableBodyScroll(bodyRef.current);
     }
     changeColor(index); // Change color of the logger piece
   };
 
-  const handleMouseEnter = (index, e) => {
+  const handleMouseEnter = (index) => {
     if (isDragging) {
       changeColor(index);
     }
@@ -64,11 +56,6 @@ export default function Home() {
   const handleMouseUp = () => {
     setIsDragging(false);
     document.body.style.overflowY = "";
-    if (bodyRef.current) {
-      // enableBodyScroll(bodyRef.current);
-      // document.body.style.overflow = "";
-      // barRef.current.style.overflowY = "scroll"; // Re-enable vertical scroll for the log pan
-    }
   };
 
   const changeColor = (index) => {
@@ -95,11 +82,9 @@ export default function Home() {
         <div className="w-full flex justify-center items-center py-[10px] mb-[20px]">
           <Image src={progressImg} alt="Progress image" width={88} height={12} />
         </div>
-        {/* <div className="relative w-full bg-[#FFFFFF] h-[600px] rounded-[10px] px-[33px] py-[28.4px]"> */}
         <div className="w-full bg-[#FFFFFF] rounded-[10px] px-[33px] py-[28.4px]">
           <p className="font-rubik font-[500] text-[#4B86AA] text-[16px] leading-[26.07px] mb-[10px]">Did you wake up in between?</p>
           <p className="font-sourceSans font-[500] text-[12px] leading-[15.6px] mb-[80px]">Click on one of the pencils to color parts of the time bar, and indicate when you were sleeping.</p>
-          {/* <div id="log-pan" className="h-[400px]" ref={logPanRef}> */}
           <div id="log-pan" ref={logPanRef}>
             <div
               className="min-h-screen  flex items-center justify-end"
@@ -140,8 +125,8 @@ export default function Home() {
                       key={index}
                       id={`logger-piece-${index}`}
                       className="w-16 h-4 bg-[#0000001A] cursor-pointer mb-1 rounded-[3px]"
-                      onMouseDown={(e) => handleMouseDown(index, e)}
-                      onMouseEnter={(e) => handleMouseEnter(index, e)}
+                      onMouseDown={() => handleMouseDown(index)}
+                      onMouseEnter={() => handleMouseEnter(index)}
                       onTouchStart={(e) => handleMouseDown(index, e)}
                       onTouchMove={(e) => {
                         const element = document.elementFromPoint(
@@ -150,7 +135,7 @@ export default function Home() {
                         );
                         if (element && element.id.includes("logger-piece-")) {
                           const touchIndex = parseInt(element.id.split("-").pop());
-                          handleMouseEnter(touchIndex, e);
+                          handleMouseEnter(touchIndex);
                         }
                       }}
                     />
